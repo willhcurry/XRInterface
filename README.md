@@ -61,21 +61,6 @@ This project supports WebXR for compatible browsers and devices:
 2. Access the site from a WebXR-compatible browser
 3. Click the "Enter VR" button that appears when a headset is connected
 
-## Project Structure
-
-XRInterface/
-├── public/ # Static assets
-├── src/
-│ ├── components/ # Reusable UI components
-│ ├── hooks/ # Custom React hooks
-│ ├── contexts/ # State management
-│ ├── scenes/ # 3D scene definitions
-│ ├── utils/ # Utility functions
-│ ├── App.jsx # Main application component
-│ └── main.jsx # Entry point
-├── docs/ # Documentation
-└── package.json # Dependencies and scripts
-
 ## Documentation
 
 For more detailed information about the project, check out:
