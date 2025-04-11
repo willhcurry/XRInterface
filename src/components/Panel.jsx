@@ -27,8 +27,9 @@ import * as THREE from "three";
  * @param {string} props.id - Unique identifier for the panel
  * @param {boolean} props.active - Whether this panel is currently active
  * @param {Function} props.onClick - Callback function when panel is selected
+ * @param {React.ReactNode} props.children - Content to display inside the panel
  */
-export default function Panel({ position, label, id, active, onClick }) {
+export default function Panel({ position, label, id, active, onClick, children }) {
   // Reference to the panel group for animations
   const ref = useRef();
   
@@ -54,6 +55,13 @@ export default function Panel({ position, label, id, active, onClick }) {
         active || hovered ? 1.1 : 1,
         0.1
       );
+      
+      // Position animation for active panels (move forward)
+      ref.current.position.z = THREE.MathUtils.lerp(
+        ref.current.position.z,
+        active ? 0.3 : 0,
+        0.1
+      );
     }
   });
   
@@ -66,7 +74,7 @@ export default function Panel({ position, label, id, active, onClick }) {
     >
       <group position={position} ref={ref}>
         {/* 3D backdrop for the panel */}
-        <Box args={[2, 1, 0.1]}>
+        <Box args={[2, 1.5, 0.1]}>
           <meshStandardMaterial 
             color={active ? "#4285F4" : "#3399ff"}  // Blue when active, lighter blue when inactive
             transparent 
@@ -76,12 +84,12 @@ export default function Panel({ position, label, id, active, onClick }) {
           />
         </Box>
         
-        {/* HTML content rendered in 3D space */}
+        {/* Header label */}
         <Html 
-          center  // Center align the HTML content
-          distanceFactor={5}  // Scale adjustment based on distance
-          position={[0, 0, 0.06]}  // Slightly in front of the box
-          transform  // Enable 3D transformations
+          center
+          distanceFactor={5}
+          position={[0, 0.6, 0.06]}
+          transform
         >
           <div style={{ 
             color: 'white', 
@@ -90,11 +98,37 @@ export default function Panel({ position, label, id, active, onClick }) {
             padding: '10px 20px',
             backgroundColor: 'rgba(0,0,0,0.5)',  // Semi-transparent background
             borderRadius: '5px',
-            userSelect: 'none'  // Prevent text selection
+            userSelect: 'none',  // Prevent text selection
+            width: '100%',
+            textAlign: 'center'
           }}>
             {label}
           </div>
         </Html>
+        
+        {/* Panel content - only shown when active */}
+        {active && (
+          <Html 
+            center
+            distanceFactor={5}
+            position={[0, -0.1, 0.06]}
+            transform
+          >
+            <div style={{ 
+              width: '350px',
+              maxHeight: '250px',
+              overflowY: 'auto',
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              borderRadius: '5px',
+              padding: '15px',
+              color: 'white',
+              fontFamily: 'Arial, sans-serif',
+              boxShadow: '0 0 10px rgba(0,0,0,0.3)'
+            }}>
+              {children}
+            </div>
+          </Html>
+        )}
       </group>
     </Interactive>
   );

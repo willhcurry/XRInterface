@@ -86,3 +86,22 @@ MIT
 - Three.js team for their incredible 3D library
 - React Three Fiber/Drei maintainers for their React integration tools
 
+## XR Design Principles
+
+This project implements several key XR interface design principles:
+
+- **Spatial UI Design**: Ergonomic positioning of elements in 3D space
+- **Interactive Feedback**: Visual cues and animations for user interactions
+- **Performance Optimization**: Techniques to maintain high frame rates
+- **Input Abstraction**: Support for various XR input methods
+- **Content Legibility**: Ensuring text and UI elements are clear in 3D
+
+For more detailed information on the XR principles implemented in this project, see [XR_PRINCIPLES.md](./docs/XR_PRINCIPLES.md).
+
+## Live Demo
+
+View the live demo of this project on GitHub Pages:
+[XRInterface Demo](https://yourusername.github.io/XRInterface/)
+
+Note: For the best experience, view in a WebXR-compatible browser with a VR headset connected.
+

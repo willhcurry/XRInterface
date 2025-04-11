@@ -10,24 +10,62 @@
  * - Provides consistent lighting for UI elements
  * - Organizes panels in an ergonomic spatial arrangement
  * - Handles panel selection and state changes
+ * - Implements smooth transitions between panels
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Panel from "./Panel";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+import SettingsPanel from "./panels/SettingsPanel";
+import AppPanel from "./panels/AppPanel";
+import NotificationsPanel from "./panels/NotificationsPanel";
+import "./PanelContent.css";
 
 export default function Interface() {
   // Track which panel is currently active
   const [activePanel, setActivePanel] = useState("app1");
   
+  // Track panel positions for smooth animations
+  const [panelPositions, setPanelPositions] = useState({
+    settings: new THREE.Vector3(-2, 0, 0),
+    app1: new THREE.Vector3(0, 0, 0),
+    notifications: new THREE.Vector3(2, 0, 0)
+  });
+  
   // Access the Three.js viewport for responsive positioning
   const { viewport } = useThree();
   
   /**
-   * Handles panel selection events
+   * Handles panel selection events and rearranges panels
    * @param {string} panelId - The ID of the selected panel
    */
   const handlePanelClick = (panelId) => {
+    // If already active, do nothing
+    if (activePanel === panelId) return;
+    
+    // Set the new active panel
     setActivePanel(panelId);
+    
+    // Create new positions based on the selected panel
+    const newPositions = { ...panelPositions };
+    
+    // Arrange panels based on which one was selected
+    if (panelId === "settings") {
+      newPositions.settings = new THREE.Vector3(0, 0, 0);
+      newPositions.app1 = new THREE.Vector3(2, 0, 0);
+      newPositions.notifications = new THREE.Vector3(4, 0, 0);
+    } else if (panelId === "app1") {
+      newPositions.settings = new THREE.Vector3(-2, 0, 0);
+      newPositions.app1 = new THREE.Vector3(0, 0, 0);
+      newPositions.notifications = new THREE.Vector3(2, 0, 0);
+    } else if (panelId === "notifications") {
+      newPositions.settings = new THREE.Vector3(-4, 0, 0);
+      newPositions.app1 = new THREE.Vector3(-2, 0, 0);
+      newPositions.notifications = new THREE.Vector3(0, 0, 0);
+    }
+    
+    // Update the positions
+    setPanelPositions(newPositions);
   };
   
   return (
@@ -41,30 +79,36 @@ export default function Interface() {
       
       {/* Settings Panel - left position */}
       <Panel 
-        position={[-2, 0, 0]} 
+        position={[panelPositions.settings.x, panelPositions.settings.y, panelPositions.settings.z]} 
         label="Settings" 
         id="settings"
         active={activePanel === "settings"}
         onClick={() => handlePanelClick("settings")}
-      />
+      >
+        <SettingsPanel />
+      </Panel>
       
       {/* Main App Panel - center position */}
       <Panel 
-        position={[0, 0, 0]} 
-        label="App 1" 
+        position={[panelPositions.app1.x, panelPositions.app1.y, panelPositions.app1.z]} 
+        label="Applications" 
         id="app1"
         active={activePanel === "app1"}
         onClick={() => handlePanelClick("app1")}
-      />
+      >
+        <AppPanel />
+      </Panel>
       
       {/* Notifications Panel - right position */}
       <Panel 
-        position={[2, 0, 0]} 
+        position={[panelPositions.notifications.x, panelPositions.notifications.y, panelPositions.notifications.z]} 
         label="Notifications" 
         id="notifications"
         active={activePanel === "notifications"}
         onClick={() => handlePanelClick("notifications")}
-      />
+      >
+        <NotificationsPanel />
+      </Panel>
     </group>
   );
 }

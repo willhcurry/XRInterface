@@ -1,0 +1,118 @@
+/* src/PanelContent.css */
+/* Base styles for all panels */
+h3 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 8px;
+  font-size: 18px;
+}
+
+/* Settings Panel Styles */
+.setting-item {
+  margin-bottom: 15px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.setting-item input[type="range"] {
+  width: 100%;
+  background: rgba(255,255,255,0.2);
+  height: 6px;
+  border-radius: 3px;
+  appearance: none;
+  outline: none;
+}
+
+.setting-item input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.setting-item.checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.setting-item.checkbox input {
+  margin-right: 8px;
+}
+
+/* App Panel Styles */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.app-icon {
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.app-icon:hover, 
+.app-icon.selected {
+  background: rgba(66, 133, 244, 0.4);
+}
+
+.app-icon-graphic {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.app-name {
+  font-size: 12px;
+}
+
+/* Notifications Panel Styles */
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notification-item {
+  display: flex;
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.notification-item:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.notification-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.notification-app, 
+.notification-time {
+  font-size: 12px;
+  opacity: 0.8;
+}

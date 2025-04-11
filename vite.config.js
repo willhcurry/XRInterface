@@ -13,9 +13,19 @@ export default defineConfig({
   // Use React plugin for JSX support and Fast Refresh
   plugins: [react()],
   
+  // Base path for GitHub Pages deployment
+  base: '/XRInterface/',
+  
   // Development server configuration
   server: {
     port: 5173,  // Standard port for Vite development server
     open: true   // Automatically open browser on start
+  },
+  
+  // Build configuration
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true
   }
 });
