@@ -33,7 +33,7 @@ XRInterface demonstrates an immersive spatial user interface designed for next-g
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/XRInterface.git
+   git clone https://github.com/willhcurry/XRInterface.git
    cd XRInterface
    ```
 
