@@ -101,7 +101,7 @@ For more detailed information on the XR principles implemented in this project, 
 ## Live Demo
 
 View the live demo of this project on GitHub Pages:
-[XRInterface Demo](https://yourusername.github.io/XRInterface/)
+[XRInterface Demo](https://willhcurry.github.io/XRInterface/)
 
 Note: For the best experience, view in a WebXR-compatible browser with a VR headset connected.
 
