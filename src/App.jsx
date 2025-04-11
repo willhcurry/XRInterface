@@ -11,6 +11,7 @@
  * - Renders the main UI interface within the 3D space
  * - Includes environmental lighting for realistic rendering
  * - Provides debug controls for development and testing
+ * - Implements camera controls for non-VR exploration
  */
 import React, { useState } from 'react';
 import { Canvas } from "@react-three/fiber";
@@ -20,18 +21,31 @@ import Interface from "./components/Interface";
 import DebugPanel from "./components/DebugPanel";
 import "./App.css";
 
+/**
+ * App Component
+ * 
+ * The main application wrapper that sets up the 3D canvas,
+ * XR environment, and debugging tools.
+ */
 export default function App() {
-  // State for debug settings
+  /**
+   * State for debug settings
+   * Controls various aspects of the development environment
+   * These settings only affect the developer experience, not end users
+   */
   const [debugSettings, setDebugSettings] = useState({
     showGrid: true,
     panelScale: 1.0,
     orbitControlsEnabled: true,
   });
   
-  // Only show debug panel during development
+  // Determine if we're in development environment
   const isDev = process.env.NODE_ENV === 'development';
 
-  // Update the debug settings
+  /**
+   * Updates debug settings from the debug panel
+   * @param {Object} newSettings - The updated settings object
+   */
   const handleSettingsChange = (newSettings) => {
     setDebugSettings(newSettings);
   };
@@ -46,13 +60,13 @@ export default function App() {
       
       {/* 3D Canvas with camera positioned at standing eye height */}
       <Canvas camera={{ position: [0, 1.6, 3] }}>
-        {/* Add OrbitControls for mouse navigation - disabled in VR mode */}
+        {/* OrbitControls for non-VR camera movement - configurable via debug panel */}
         {debugSettings.orbitControlsEnabled && (
           <OrbitControls 
             enablePan={true}
             enableZoom={true}
             enableRotate={true}
-            target={[0, 1.5, -1]} // Target the center of your interface
+            target={[0, 1.5, -1]} // Target the center of the interface
           />
         )}
         

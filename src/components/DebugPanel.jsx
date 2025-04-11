@@ -1,12 +1,41 @@
+/**
+ * Debug Panel Component
+ * 
+ * Provides a development-only control panel for adjusting and visualizing
+ * the XR interface in real-time. This component is designed to facilitate
+ * testing and refinement of 3D interfaces without requiring a VR headset.
+ * 
+ * Features:
+ * - Toggle visibility of spatial reference grid
+ * - Enable/disable camera orbit controls for scene exploration
+ * - Adjust interface scale to test different size configurations
+ * - Provide instructions for navigation controls
+ * 
+ * Note: This component is only rendered in development environment
+ * and does not appear in production builds.
+ */
 import React, { useState } from 'react';
 
+/**
+ * DebugPanel Component
+ * 
+ * @param {Object} props - Component properties
+ * @param {Function} props.onSettingsChange - Callback when settings are changed
+ */
 function DebugPanel({ onSettingsChange }) {
+  // Initial state for debug settings
   const [settings, setSettings] = useState({
     showGrid: true,
     panelScale: 1.0,
     orbitControlsEnabled: true,
   });
 
+  /**
+   * Handles changes to individual settings
+   * 
+   * @param {string} setting - The setting key to update
+   * @param {any} value - The new value for the setting
+   */
   const handleChange = (setting, value) => {
     const newSettings = { ...settings, [setting]: value };
     setSettings(newSettings);
@@ -28,6 +57,7 @@ function DebugPanel({ onSettingsChange }) {
     }}>
       <h3 style={{ margin: '0 0 10px 0' }}>Debug Controls</h3>
       
+      {/* Grid visibility toggle */}
       <div>
         <label>
           <input 
@@ -39,6 +69,7 @@ function DebugPanel({ onSettingsChange }) {
         </label>
       </div>
       
+      {/* Camera controls toggle */}
       <div style={{ marginTop: '10px' }}>
         <label>
           <input 
@@ -50,6 +81,7 @@ function DebugPanel({ onSettingsChange }) {
         </label>
       </div>
       
+      {/* Scale slider for panel size adjustment */}
       <div style={{ marginTop: '10px' }}>
         <label>Panel Scale: {settings.panelScale.toFixed(1)}</label>
         <input 
@@ -63,6 +95,7 @@ function DebugPanel({ onSettingsChange }) {
         />
       </div>
       
+      {/* Control instructions */}
       <div style={{ marginTop: '10px', fontSize: '10px', opacity: 0.8 }}>
         <p>Camera Controls:</p>
         <ul style={{ margin: '5px 0', paddingLeft: '15px' }}>

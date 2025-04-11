@@ -53,6 +53,28 @@ XRInterface demonstrates an immersive spatial user interface designed for next-g
 
 4. Open your browser and navigate to `http://localhost:5173`
 
+## Development Tools
+
+XRInterface includes a suite of built-in development tools to help visualize and test XR interfaces:
+
+### Debug Panel
+
+In development mode, a debug panel appears in the top-left corner with controls for:
+
+- **Grid Visualization**: Toggle a 3D reference grid to understand spatial positioning
+- **Camera Controls**: Enable/disable orbit controls for exploring the 3D scene
+- **Interface Scaling**: Adjust the scale of UI elements to test different sizes
+
+### Camera Navigation
+
+When camera controls are enabled, you can navigate the 3D scene without a VR headset:
+
+- **Left Click + Drag**: Rotate the camera around the scene
+- **Right Click + Drag**: Pan the camera
+- **Scroll Wheel**: Zoom in and out
+
+These tools make it possible to effectively develop and test XR interfaces even without physical VR hardware.
+
 ## Viewing in VR
 
 This project supports WebXR for compatible browsers and devices:

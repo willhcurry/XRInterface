@@ -11,6 +11,7 @@
  * - Organizes panels in an ergonomic spatial arrangement
  * - Handles panel selection and state changes
  * - Implements smooth transitions between panels
+ * - Supports debug visualization for development
  */
 import React, { useState, useEffect } from "react";
 import Panel from "./Panel";
@@ -22,6 +23,15 @@ import NotificationsPanel from "./panels/NotificationsPanel";
 import "./PanelContent.css";
 import { Grid } from "@react-three/drei";
 
+/**
+ * Interface Component
+ * 
+ * The main spatial UI component that manages and arranges
+ * all interactive panels in 3D space.
+ * 
+ * @param {Object} props - Component properties
+ * @param {Object} props.debugSettings - Settings for debug visualization
+ */
 export default function Interface({ debugSettings = { showGrid: false, panelScale: 1.0 } }) {
   // Track which panel is currently active
   const [activePanel, setActivePanel] = useState("app1");
@@ -78,45 +88,54 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
       {/* Directional light for creating depth through shadows */}
       <spotLight position={[0, 5, 5]} angle={0.3} penumbra={1} />
       
-      {/* Debug visualizations */}
-      {debugSettings.showGrid && <Grid infiniteGrid position={[0, 0, 0]} cellSize={0.5} cellThickness={0.5} sectionSize={1} sectionThickness={1} />}
+      {/* Debug grid visualization - only shown when enabled in debug settings */}
+      {debugSettings.showGrid && (
+        <Grid 
+          position={[0, -1, 0]} 
+          args={[10, 10]} 
+          cellSize={0.5}
+          cellThickness={0.5}
+          cellColor="#6f6f6f"
+          sectionSize={2}
+          sectionThickness={1}
+          sectionColor="#9d4b4b"
+        />
+      )}
       
-      {/* Settings Panel - left position */}
-      <Panel 
-        position={[panelPositions.settings.x, panelPositions.settings.y, panelPositions.settings.z]} 
-        label="Settings" 
-        id="settings"
-        active={activePanel === "settings"}
-        onClick={() => handlePanelClick("settings")}
-      >
-        <SettingsPanel />
-      </Panel>
-      
-      {/* Main App Panel - center position */}
-      <Panel 
-        position={[panelPositions.app1.x, panelPositions.app1.y, panelPositions.app1.z]} 
-        label="Applications" 
-        id="app1"
-        active={activePanel === "app1"}
-        onClick={() => handlePanelClick("app1")}
-      >
-        <AppPanel />
-      </Panel>
-      
-      {/* Notifications Panel - right position */}
-      <Panel 
-        position={[panelPositions.notifications.x, panelPositions.notifications.y, panelPositions.notifications.z]} 
-        label="Notifications" 
-        id="notifications"
-        active={activePanel === "notifications"}
-        onClick={() => handlePanelClick("notifications")}
-      >
-        <NotificationsPanel />
-      </Panel>
-      
-      {/* Your panels with debuggable scale */}
+      {/* Interface element container with debug-configurable scale */}
       <group scale={debugSettings.panelScale}>
-        {/* Your existing panels */}
+        {/* Settings Panel - left position */}
+        <Panel 
+          position={[panelPositions.settings.x, panelPositions.settings.y, panelPositions.settings.z]} 
+          label="Settings" 
+          id="settings"
+          active={activePanel === "settings"}
+          onClick={() => handlePanelClick("settings")}
+        >
+          <SettingsPanel />
+        </Panel>
+        
+        {/* Main App Panel - center position */}
+        <Panel 
+          position={[panelPositions.app1.x, panelPositions.app1.y, panelPositions.app1.z]} 
+          label="Applications" 
+          id="app1"
+          active={activePanel === "app1"}
+          onClick={() => handlePanelClick("app1")}
+        >
+          <AppPanel />
+        </Panel>
+        
+        {/* Notifications Panel - right position */}
+        <Panel 
+          position={[panelPositions.notifications.x, panelPositions.notifications.y, panelPositions.notifications.z]} 
+          label="Notifications" 
+          id="notifications"
+          active={activePanel === "notifications"}
+          onClick={() => handlePanelClick("notifications")}
+        >
+          <NotificationsPanel />
+        </Panel>
       </group>
     </group>
   );
