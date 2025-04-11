@@ -20,8 +20,9 @@ import SettingsPanel from "./panels/SettingsPanel";
 import AppPanel from "./panels/AppPanel";
 import NotificationsPanel from "./panels/NotificationsPanel";
 import "./PanelContent.css";
+import { Grid } from "@react-three/drei";
 
-export default function Interface() {
+export default function Interface({ debugSettings = { showGrid: false, panelScale: 1.0 } }) {
   // Track which panel is currently active
   const [activePanel, setActivePanel] = useState("app1");
   
@@ -77,6 +78,9 @@ export default function Interface() {
       {/* Directional light for creating depth through shadows */}
       <spotLight position={[0, 5, 5]} angle={0.3} penumbra={1} />
       
+      {/* Debug visualizations */}
+      {debugSettings.showGrid && <Grid infiniteGrid position={[0, 0, 0]} cellSize={0.5} cellThickness={0.5} sectionSize={1} sectionThickness={1} />}
+      
       {/* Settings Panel - left position */}
       <Panel 
         position={[panelPositions.settings.x, panelPositions.settings.y, panelPositions.settings.z]} 
@@ -109,6 +113,11 @@ export default function Interface() {
       >
         <NotificationsPanel />
       </Panel>
+      
+      {/* Your panels with debuggable scale */}
+      <group scale={debugSettings.panelScale}>
+        {/* Your existing panels */}
+      </group>
     </group>
   );
 }
