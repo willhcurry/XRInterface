@@ -9,6 +9,7 @@
  * - Toggle visibility of spatial reference grid
  * - Enable/disable camera orbit controls for scene exploration
  * - Adjust interface scale to test different size configurations
+ * - Toggle visual effects and background particles
  * - Provide instructions for navigation controls
  * 
  * Note: This component is only rendered in development environment
@@ -28,6 +29,7 @@ function DebugPanel({ onSettingsChange }) {
     showGrid: true,
     panelScale: 1.0,
     orbitControlsEnabled: true,
+    showParticles: true
   });
 
   /**
@@ -93,6 +95,18 @@ function DebugPanel({ onSettingsChange }) {
           onChange={(e) => handleChange('panelScale', parseFloat(e.target.value))}
           style={{ width: '100%' }}
         />
+      </div>
+      
+      {/* Particle toggle */}
+      <div style={{ marginTop: '10px' }}>
+        <label>
+          <input 
+            type="checkbox"
+            checked={settings.showParticles}
+            onChange={(e) => handleChange('showParticles', e.target.checked)}
+          />
+          Show Particles
+        </label>
       </div>
       
       {/* Control instructions */}

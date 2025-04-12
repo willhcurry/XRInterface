@@ -11,6 +11,7 @@
  * - Organizes panels in an ergonomic spatial arrangement
  * - Handles panel selection and state changes
  * - Implements smooth transitions between panels
+ * - Includes ambient particle field for visual depth
  * - Supports debug visualization for development
  */
 import React, { useState, useEffect } from "react";
@@ -22,6 +23,7 @@ import AppPanel from "./panels/AppPanel";
 import NotificationsPanel from "./panels/NotificationsPanel";
 import "./PanelContent.css";
 import { Grid } from "@react-three/drei";
+import ParticleField from "./ParticleField";
 
 /**
  * Interface Component
@@ -101,6 +103,16 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
           sectionColor="#9d4b4b"
         />
       )}
+      
+      {/* Ambient particle field for visual depth - only when enabled */}
+      {debugSettings.showParticles && 
+        <ParticleField 
+          count={2000}       // More particles but smaller
+          size={0.015}       // Much smaller size
+          color="#4285F4"    // Keep the same color
+          speed={0.005}      // Slower movement
+        />
+      }
       
       {/* Interface element container with debug-configurable scale */}
       <group scale={debugSettings.panelScale}>

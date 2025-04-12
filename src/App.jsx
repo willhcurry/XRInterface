@@ -31,12 +31,14 @@ export default function App() {
   /**
    * State for debug settings
    * Controls various aspects of the development environment
-   * These settings only affect the developer experience, not end users
+   * These settings affect the visual presentation and interaction
+   * including grid, controls, scale, and ambient particles
    */
   const [debugSettings, setDebugSettings] = useState({
     showGrid: true,
     panelScale: 1.0,
     orbitControlsEnabled: true,
+    showParticles: true
   });
   
   // Determine if we're in development environment
