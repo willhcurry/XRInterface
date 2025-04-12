@@ -13,6 +13,15 @@
  * - Realistic bubble-like appearance with transparent physical material
  * - Optimized rendering with instanced meshes for thousands of particles
  * 
+ * Performance optimization:
+ * - Uses instancedMesh for efficient rendering of many objects
+ * - Reuses a single dummy object for matrix calculations
+ * - Batches matrix updates to minimize CPU-GPU communication
+ * - Can be further tuned by adjusting:
+ *   - particle count (fewer particles = higher performance)
+ *   - geometry complexity (lower segment counts = higher performance)
+ *   - animation speed (slower updates = reduced CPU usage)
+ * 
  * This component enhances the visual appeal of the XR interface by creating
  * a sense of depth, atmosphere, and polish in the virtual space.
  */

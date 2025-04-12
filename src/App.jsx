@@ -12,6 +12,15 @@
  * - Includes environmental lighting for realistic rendering
  * - Provides debug controls for development and testing
  * - Implements camera controls for non-VR exploration
+ * 
+ * Performance considerations:
+ * - Browser environments typically cap at 60fps due to requestAnimationFrame
+ * - VR mode targets the headset's native refresh rate (90Hz+)
+ * - Performance optimizations include:
+ *   - Instanced mesh rendering for particles
+ *   - Conditional rendering of visual elements
+ *   - Optimized geometry complexity
+ *   - Debug controls to toggle visual features
  */
 import React, { useState } from 'react';
 import { Canvas } from "@react-three/fiber";

@@ -127,3 +127,34 @@ View the live demo of this project on GitHub Pages:
 
 Note: For the best experience, view in a WebXR-compatible browser with a VR headset connected.
 
+## Performance Optimization
+
+This application is optimized for both desktop browser and VR environments:
+
+### Frame Rate Considerations
+- **Browser Mode**: Typically capped at 60fps due to requestAnimationFrame sync with display refresh rate
+- **VR Mode**: Targets the VR headset's native refresh rate (90Hz+ on most modern headsets)
+
+### Performance Features
+- Instanced mesh rendering for thousands of particles
+- Conditional rendering based on debug settings
+- Optimized geometry complexity
+- Efficient matrix updates
+- Frustum culling
+
+### Performance Tuning
+Performance can be adjusted through the debug panel by:
+- Toggling particle effects
+- Adjusting panel scale
+- Enabling/disabling visual effects
+
+For maximum performance in production environments, consider:
+```js
+<Canvas 
+  gl={{ 
+    powerPreference: "high-performance",
+    antialias: false,
+    precision: "mediump"
+  }}
+>
+```
