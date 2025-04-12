@@ -25,9 +25,10 @@
 import React, { useState } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { VRButton, XR, Controllers, Hands } from "@react-three/xr";
-import { Environment, OrbitControls } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 import Interface from "./components/Interface";
 import DebugPanel from "./components/DebugPanel";
+import Controls from "./components/Controls";
 import "./App.css";
 
 /**
@@ -47,7 +48,8 @@ export default function App() {
     showGrid: true,
     panelScale: 1.0,
     orbitControlsEnabled: true,
-    showParticles: true
+    showParticles: true,
+    movementEnabled: true
   });
   
   // Determine if we're in development environment
@@ -71,15 +73,13 @@ export default function App() {
       
       {/* 3D Canvas with camera positioned at standing eye height */}
       <Canvas camera={{ position: [0, 1.6, 3] }}>
-        {/* OrbitControls for non-VR camera movement - configurable via debug panel */}
-        {debugSettings.orbitControlsEnabled && (
-          <OrbitControls 
-            enablePan={true}
-            enableZoom={true}
-            enableRotate={true}
-            target={[0, 1.5, -1]} // Target the center of the interface
-          />
-        )}
+        {/* Unified control system for both look and movement */}
+        <Controls 
+          enableOrbit={debugSettings.orbitControlsEnabled}
+          enableMovement={debugSettings.movementEnabled}
+          movementSpeed={3}
+          target={[0, 1.5, -1]}
+        />
         
         {/* XR context provider - enables WebXR API integration */}
         <XR>

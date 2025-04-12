@@ -13,7 +13,6 @@ const AppPanel = () => {
   
   return (
     <div className="app-panel">
-      <h3>Applications</h3>
       <div className="app-grid">
         {apps.map(app => (
           <div 

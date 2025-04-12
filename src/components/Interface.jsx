@@ -40,9 +40,9 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
   
   // Track panel positions for smooth animations
   const [panelPositions, setPanelPositions] = useState({
-    settings: new THREE.Vector3(-2, 0, 0),
+    settings: new THREE.Vector3(-3, 0, 0),
     app1: new THREE.Vector3(0, 0, 0),
-    notifications: new THREE.Vector3(2, 0, 0)
+    notifications: new THREE.Vector3(3, 0, 0)
   });
   
   // Access the Three.js viewport for responsive positioning
@@ -65,15 +65,15 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
     // Arrange panels based on which one was selected
     if (panelId === "settings") {
       newPositions.settings = new THREE.Vector3(0, 0, 0);
-      newPositions.app1 = new THREE.Vector3(2, 0, 0);
-      newPositions.notifications = new THREE.Vector3(4, 0, 0);
+      newPositions.app1 = new THREE.Vector3(3, 0, 0);
+      newPositions.notifications = new THREE.Vector3(6, 0, 0);
     } else if (panelId === "app1") {
-      newPositions.settings = new THREE.Vector3(-2, 0, 0);
+      newPositions.settings = new THREE.Vector3(-3, 0, 0);
       newPositions.app1 = new THREE.Vector3(0, 0, 0);
-      newPositions.notifications = new THREE.Vector3(2, 0, 0);
+      newPositions.notifications = new THREE.Vector3(3, 0, 0);
     } else if (panelId === "notifications") {
-      newPositions.settings = new THREE.Vector3(-4, 0, 0);
-      newPositions.app1 = new THREE.Vector3(-2, 0, 0);
+      newPositions.settings = new THREE.Vector3(-6, 0, 0);
+      newPositions.app1 = new THREE.Vector3(-3, 0, 0);
       newPositions.notifications = new THREE.Vector3(0, 0, 0);
     }
     

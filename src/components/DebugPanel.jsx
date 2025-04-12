@@ -29,7 +29,8 @@ function DebugPanel({ onSettingsChange }) {
     showGrid: true,
     panelScale: 1.0,
     orbitControlsEnabled: true,
-    showParticles: true
+    showParticles: true,
+    movementEnabled: true
   });
 
   /**
@@ -109,13 +110,29 @@ function DebugPanel({ onSettingsChange }) {
         </label>
       </div>
       
+      {/* Movement controls toggle */}
+      <div style={{ marginTop: '10px' }}>
+        <label>
+          <input 
+            type="checkbox"
+            checked={settings.movementEnabled}
+            onChange={(e) => handleChange('movementEnabled', e.target.checked)}
+          />
+          Enable WASD Movement
+        </label>
+      </div>
+      
       {/* Control instructions */}
       <div style={{ marginTop: '10px', fontSize: '10px', opacity: 0.8 }}>
-        <p>Camera Controls:</p>
+        <p>Navigation Controls:</p>
         <ul style={{ margin: '5px 0', paddingLeft: '15px' }}>
-          <li>Left Click + Drag: Rotate</li>
-          <li>Right Click + Drag: Pan</li>
-          <li>Scroll: Zoom</li>
+          <li>Mouse: Look around</li>
+          <li>Scroll: Zoom in/out</li>
+          <li>W/S: Move forward/backward</li>
+          <li>A/D: Strafe left/right</li>
+          <li>Q/E: Rotate left/right</li>
+          <li>Space/Shift: Move up/down</li>
+          <li>Alt: Sprint</li>
         </ul>
       </div>
     </div>
