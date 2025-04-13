@@ -22,6 +22,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { getAssetPath } from '../utils/paths';
 
 /**
  * Earth Component
@@ -41,13 +42,14 @@ const Earth = ({
   const earthRef = useRef();
   const atmosphereRef = useRef();
   
-  // Load Earth texture with error handling
-  const earthTexture = new THREE.TextureLoader().load('/textures/earth/earth.jpg', 
-    // Success callback - optional texture processing
+  // Load Earth texture with environment-aware path
+  const earthTexture = new THREE.TextureLoader().load(
+    getAssetPath('/textures/earth/earth.jpg'),
+    // Success callback
     texture => {
       console.log('Earth texture loaded successfully');
     },
-    // Progress callback - could add loading indicator
+    // Progress callback
     undefined,
     // Error callback
     err => {

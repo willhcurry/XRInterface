@@ -28,6 +28,7 @@
 import React, { useEffect } from 'react';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import { getAssetPath } from '../utils/paths';
 
 /**
  * FloorPlane Component
@@ -41,13 +42,13 @@ const FloorPlane = ({
   position = [0, -0.7, 0], 
   size = 20
 }) => {
-  // Load all texture maps for the PBR material workflow
+  // Load texture maps with environment-aware paths
   const textureMaps = useTexture({
-    map: '/textures/wood/color.png',          // Base color/albedo texture
-    normalMap: '/textures/wood/normal.png',    // Surface detail texture
-    roughnessMap: '/textures/wood/roughness.png', // Surface smoothness variation
-    metalnessMap: '/textures/wood/metalness.png', // Metallic property variation
-    aoMap: '/textures/wood/ao.png',            // Ambient occlusion shadows
+    map: getAssetPath('/textures/wood/color.png'),
+    normalMap: getAssetPath('/textures/wood/normal.png'),
+    roughnessMap: getAssetPath('/textures/wood/roughness.png'),
+    metalnessMap: getAssetPath('/textures/wood/metalness.png'),
+    aoMap: getAssetPath('/textures/wood/ao.png'),
   });
   
   // Configure texture repeat for proper tiling based on floor size
