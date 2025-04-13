@@ -25,11 +25,13 @@
 import React, { useState } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { VRButton, XR, Controllers, Hands } from "@react-three/xr";
-import { Environment } from "@react-three/drei";
+import { Environment, Stars } from "@react-three/drei";
 import Interface from "./components/Interface";
 import DebugPanel from "./components/DebugPanel";
 import Controls from "./components/Controls";
 import "./App.css";
+import * as THREE from 'three';
+import Earth from './components/Earth';
 
 /**
  * App Component
@@ -72,13 +74,13 @@ export default function App() {
       <VRButton />
       
       {/* 3D Canvas with camera positioned at standing eye height */}
-      <Canvas camera={{ position: [0, 1.6, 3] }}>
+      <Canvas camera={{ position: [0, 1.6, 4] }}>
         {/* Unified control system for both look and movement */}
         <Controls 
           enableOrbit={debugSettings.orbitControlsEnabled}
           enableMovement={debugSettings.movementEnabled}
           movementSpeed={3}
-          target={[0, 1.5, -1]}
+          target={[0, 1.5, 0]}
         />
         
         {/* XR context provider - enables WebXR API integration */}
@@ -89,8 +91,24 @@ export default function App() {
           {/* Enables hand tracking visualization when supported */}
           <Hands />
           
-          {/* Provides ambient lighting and skybox */}
-          <Environment preset="sunset" />
+          {/* Space environment with stars */}
+          <color attach="background" args={['#000']} />
+          <fog attach="fog" args={['#000', 15, 30]} />
+          <Stars 
+            radius={100}
+            depth={50}
+            count={5000}
+            factor={4}
+            saturation={0.5}
+            fade
+          />
+          
+          {/* Add Earth with atmosphere */}
+          <Earth position={[0, 5, -15]} scale={5} rotate={true} />
+          
+          {/* Ambient lighting for the UI */}
+          <ambientLight intensity={0.2} />
+          <directionalLight position={[0, 5, 5]} intensity={0.5} />
           
           {/* Main UI interface containing all interactive panels */}
           <Interface debugSettings={debugSettings} />

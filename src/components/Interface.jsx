@@ -24,6 +24,8 @@ import NotificationsPanel from "./panels/NotificationsPanel";
 import "./PanelContent.css";
 import { Grid } from "@react-three/drei";
 import ParticleField from "./ParticleField";
+import { useTexture } from "@react-three/drei";
+import FloorPlane from './FloorPlane';
 
 /**
  * Interface Component
@@ -38,11 +40,19 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
   // Track which panel is currently active
   const [activePanel, setActivePanel] = useState("app1");
   
-  // Track panel positions for smooth animations
+  // Calculate positions along a curve
+  const calculateCurvedPosition = (index, totalItems, radius = 4, angleSpread = Math.PI / 2) => {
+    const angle = (index / (totalItems - 1)) * angleSpread - (angleSpread / 2);
+    const x = Math.sin(angle) * radius;
+    const z = -Math.cos(angle) * radius + radius;
+    return new THREE.Vector3(x, 0, z);
+  };
+
+  // Create curved panel positions instead of linear positioning
   const [panelPositions, setPanelPositions] = useState({
-    settings: new THREE.Vector3(-3, 0, 0),
-    app1: new THREE.Vector3(0, 0, 0),
-    notifications: new THREE.Vector3(3, 0, 0)
+    settings: calculateCurvedPosition(0, 3),
+    app1: calculateCurvedPosition(1, 3),
+    notifications: calculateCurvedPosition(2, 3)
   });
   
   // Access the Three.js viewport for responsive positioning
@@ -53,48 +63,54 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
    * @param {string} panelId - The ID of the selected panel
    */
   const handlePanelClick = (panelId) => {
-    // If already active, do nothing
     if (activePanel === panelId) return;
     
-    // Set the new active panel
     setActivePanel(panelId);
     
-    // Create new positions based on the selected panel
+    const totalPanels = 3;
     const newPositions = { ...panelPositions };
     
-    // Arrange panels based on which one was selected
+    // Position panels along the curve based on which is active
     if (panelId === "settings") {
-      newPositions.settings = new THREE.Vector3(0, 0, 0);
-      newPositions.app1 = new THREE.Vector3(3, 0, 0);
-      newPositions.notifications = new THREE.Vector3(6, 0, 0);
+      newPositions.settings = calculateCurvedPosition(1, totalPanels);
+      newPositions.app1 = calculateCurvedPosition(2, totalPanels);
+      newPositions.notifications = calculateCurvedPosition(0, totalPanels);
     } else if (panelId === "app1") {
-      newPositions.settings = new THREE.Vector3(-3, 0, 0);
-      newPositions.app1 = new THREE.Vector3(0, 0, 0);
-      newPositions.notifications = new THREE.Vector3(3, 0, 0);
+      newPositions.settings = calculateCurvedPosition(0, totalPanels);
+      newPositions.app1 = calculateCurvedPosition(1, totalPanels);
+      newPositions.notifications = calculateCurvedPosition(2, totalPanels);
     } else if (panelId === "notifications") {
-      newPositions.settings = new THREE.Vector3(-6, 0, 0);
-      newPositions.app1 = new THREE.Vector3(-3, 0, 0);
-      newPositions.notifications = new THREE.Vector3(0, 0, 0);
+      newPositions.settings = calculateCurvedPosition(2, totalPanels);
+      newPositions.app1 = calculateCurvedPosition(0, totalPanels);
+      newPositions.notifications = calculateCurvedPosition(1, totalPanels);
     }
     
-    // Update the positions
     setPanelPositions(newPositions);
   };
   
+  // Rotate each panel to face the center
+  const getPanelRotation = (position) => {
+    // Calculate the angle to face the center point (0, 0, 0)
+    const angle = Math.atan2(position.x, position.z);
+    return [0, -angle, 0]; // Rotate around Y axis
+  };
+  
   return (
-    // Position the entire interface at comfortable viewing height and distance
-    <group position={[0, 1.5, -1]}>
+    <group position={[0, 1.2, 0]}>
       {/* Ambient light ensures panels are visible from all angles */}
       <ambientLight intensity={0.5} />
       
       {/* Directional light for creating depth through shadows */}
-      <spotLight position={[0, 5, 5]} angle={0.3} penumbra={1} />
+      <spotLight position={[0, 5, 3]} angle={0.3} penumbra={1} />
+      
+      {/* Add a high-quality floor */}
+      <FloorPlane position={[0, -0.7, 0]} size={20} />
       
       {/* Debug grid visualization - only shown when enabled in debug settings */}
       {debugSettings.showGrid && (
         <Grid 
-          position={[0, -1, 0]} 
-          args={[10, 10]} 
+          position={[0, -0.69, 0]} // Slightly above floor 
+          args={[20, 20]} 
           cellSize={0.5}
           cellThickness={0.5}
           cellColor="#6f6f6f"
@@ -107,18 +123,19 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
       {/* Ambient particle field for visual depth - only when enabled */}
       {debugSettings.showParticles && 
         <ParticleField 
-          count={2000}       // More particles but smaller
-          size={0.015}       // Much smaller size
-          color="#4285F4"    // Keep the same color
-          speed={0.005}      // Slower movement
+          count={2000}
+          size={0.015}
+          color="#4285F4"
+          speed={0.005}
         />
       }
       
       {/* Interface element container with debug-configurable scale */}
       <group scale={debugSettings.panelScale}>
-        {/* Settings Panel - left position */}
+        {/* Settings Panel - left position with rotation to face center */}
         <Panel 
           position={[panelPositions.settings.x, panelPositions.settings.y, panelPositions.settings.z]} 
+          rotation={getPanelRotation(panelPositions.settings)}
           label="Settings" 
           id="settings"
           active={activePanel === "settings"}
@@ -127,9 +144,10 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
           <SettingsPanel />
         </Panel>
         
-        {/* Main App Panel - center position */}
+        {/* Main App Panel - center position with rotation to face center */}
         <Panel 
           position={[panelPositions.app1.x, panelPositions.app1.y, panelPositions.app1.z]} 
+          rotation={getPanelRotation(panelPositions.app1)}
           label="Applications" 
           id="app1"
           active={activePanel === "app1"}
@@ -138,9 +156,10 @@ export default function Interface({ debugSettings = { showGrid: false, panelScal
           <AppPanel />
         </Panel>
         
-        {/* Notifications Panel - right position */}
+        {/* Notifications Panel - right position with rotation to face center */}
         <Panel 
           position={[panelPositions.notifications.x, panelPositions.notifications.y, panelPositions.notifications.z]} 
+          rotation={getPanelRotation(panelPositions.notifications)}
           label="Notifications" 
           id="notifications"
           active={activePanel === "notifications"}
