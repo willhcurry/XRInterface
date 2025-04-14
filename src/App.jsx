@@ -30,6 +30,7 @@ import {
 import Controls from "./components/Controls";
 import Earth from './components/Earth';
 import "./App.css";
+import ErrorBoundary from './ErrorBoundary';
 
 // Lazy load components that aren't needed immediately
 const Interface = lazy(() => import("./components/Interface"));
@@ -135,7 +136,7 @@ export default function App() {
   };
 
   return (
-    <>
+    <ErrorBoundary>
       {/* Debug controls - Only visible during development */}
       {isDev && (
         <Suspense fallback={<DefaultFallback />}>
@@ -165,15 +166,21 @@ export default function App() {
         <AdaptiveEvents enabled={adaptiveQuality} />
         <PerformanceMonitor 
           onIncline={() => {
-            setAdaptiveQuality(false);
-            handlePerformanceChange(60);
+            // Prevent redundant updates
+            if (!adaptiveQuality) {
+              setAdaptiveQuality(false);
+              handlePerformanceChange(60);
+            }
           }}
           onDecline={(currentFPS) => {
-            setAdaptiveQuality(true);
-            handlePerformanceChange(currentFPS);
+            // Prevent redundant updates
+            if (adaptiveQuality === false) {
+              setAdaptiveQuality(true);
+              handlePerformanceChange(currentFPS);
+            }
           }}
-          debounce={500}
-          iterations={3}
+          debounce={1000} // Increase debounce time
+          iterations={5}   // Require more iterations before triggering
         />
         
         {/* Navigation controls */}
@@ -241,6 +248,6 @@ export default function App() {
       <Suspense fallback={<LoadingMessage />}>
         <BottomToolbarHUD />
       </Suspense>
-    </>
+    </ErrorBoundary>
   );
 }

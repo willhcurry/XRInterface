@@ -105,46 +105,45 @@ const ParticleField = ({
     return array;
   }, [count, particles, colorPalette]);
   
-  // Animation loop for continuous motion
-  useFrame((state) => {
-    // Only update every other frame or based on performance
-    if (state.clock.elapsedTime % 2 === 0) return;
-    
-    // Reduce matrix updates to every 2nd or 3rd frame
-    const updateFrequency = 3;
-    const shouldUpdate = Math.floor(state.clock.elapsedTime * 60) % updateFrequency === 0;
-    
-    if (shouldUpdate) {
-      // Update each particle position
-      particles.forEach((particle, i) => {
-        let { time, factor, speed: particleSpeed, x, y, z, sizeVariation } = particle;
+  // Fixed version with frame skipping and better cleanup:
+  const frameSkip = useRef(0);
 
-        // Update particle time
-        time = particle.time += speed;
-        
-        // Calculate new position with subtle movement
-        // Scale varies based on time and particle's unique size variation
-        const scale = (Math.cos(time) + 2) * sizeVariation * 0.5;
-        const s = THREE.MathUtils.lerp(0.4, 1, scale);
-        
-        // Set position with gentle bobbing movement
-        dummy.position.set(
-          x + Math.sin(time / 10) * 2,
-          y + Math.cos(time / 10) * 2,
-          z + Math.sin(time / 10) * 2
-        );
-        
-        // Apply scale to the dummy object
-        dummy.scale.set(s, s, s);
-        dummy.updateMatrix();
-        
-        // Update the instance matrix
-        mesh.current.setMatrixAt(i, dummy.matrix);
-      });
+  useFrame((state) => {
+    // Skip frames to reduce updates (especially in VR)
+    frameSkip.current = (frameSkip.current + 1) % 2;
+    if (frameSkip.current !== 0) return;
+    
+    if (!mesh.current) return;
+    
+    // Update each particle position
+    particles.forEach((particle, i) => {
+      let { time, factor, speed: particleSpeed, x, y, z, sizeVariation } = particle;
+
+      // Update particle time
+      time = particle.time += speed;
       
-      // Notify Three.js that instanced matrices need updating
-      mesh.current.instanceMatrix.needsUpdate = true;
-    }
+      // Calculate new position with subtle movement
+      // Scale varies based on time and particle's unique size variation
+      const scale = (Math.cos(time) + 2) * sizeVariation * 0.5;
+      const s = THREE.MathUtils.lerp(0.4, 1, scale);
+      
+      // Set position with gentle bobbing movement
+      dummy.position.set(
+        x + Math.sin(time / 10) * 2,
+        y + Math.cos(time / 10) * 2,
+        z + Math.sin(time / 10) * 2
+      );
+      
+      // Apply scale to the dummy object
+      dummy.scale.set(s, s, s);
+      dummy.updateMatrix();
+      
+      // Update the instance matrix
+      mesh.current.setMatrixAt(i, dummy.matrix);
+    });
+    
+    // Notify Three.js that instanced matrices need updating
+    mesh.current.instanceMatrix.needsUpdate = true;
   });
 
   // Create instanced material with color attribute
