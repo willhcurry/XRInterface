@@ -1,160 +1,96 @@
 # XRInterface
 
-A modern, high-performance 3D user interface demo for XR environments built with React, Three.js, and React Three Fiber.
+A modern, high-performance spatial user interface for XR environments built with React Three Fiber.
 
-## Overview
+![XRInterface Preview](./public/xr-preview.jpg)
 
-XRInterface demonstrates an immersive spatial user interface designed for next-generation XR headsets. This project showcases advanced web-based 3D rendering techniques optimized for virtual reality experiences.
+## Live Demo
 
-## Features
+Experience the interface on [GitHub Pages](https://willhcurry.github.io/XRInterface/)
 
-- Immersive 3D UI panels with intuitive spatial arrangement
-- Interactive elements optimized for XR input methods
-- Performance-optimized rendering for high framerate in XR
-- Responsive design that adapts to different viewing distances
-- Modern lighting and material design for comfortable viewing
+* **Desktop users**: Navigate with mouse/keyboard controls
+* **VR users**: Click the "Enter VR" button with a connected headset
 
-## Technologies
+## Project Overview
 
-- React 18
-- Three.js
-- React Three Fiber
-- React Three Drei
-- Modern JavaScript (ES6+)
+XRInterface demonstrates a Pico-inspired VR home environment with a curved main panel, friends section, and fixed toolbar navigation - all optimized for immersive spatial computing.
 
-## Getting Started
+### Key Features
 
-### Prerequisites
+- **Immersive 3D UI** with panels and ergonomic spatial arrangement
+- **Pico-style interface** with main content, app panels, and bottom toolbar
+- **Earth with atmospheric effect** as an environmental backdrop
+- **Ambient particle field** creating depth and visual appeal
+- **PBR materials** with high-quality wood textures for the floor
+- **Performance-optimized** rendering with WebXR support
 
-- Node.js 16+
-- npm or yarn
+## Technologies Used
 
-### Installation
+- **React 18** with functional components and hooks
+- **Three.js** for 3D rendering via React Three Fiber
+- **React Three Drei** for advanced 3D components
+- **WebXR API** for VR headset support
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/willhcurry/XRInterface.git
-   cd XRInterface
-   ```
+## Development Features
 
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn
-   ```
+The project includes several developer tools to assist with testing and refinement:
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+- **Debug Panel** (development mode only): Toggle grids, adjust scaling, and modify visual effects
+- **Camera Controls**: Navigate the scene with orbit controls or WASD movement
+- **Performance Optimizations**: Instanced meshes, level-of-detail systems, and memory management
+- **Adaptive Quality**: Dynamic rendering adjustments based on device performance
 
-4. Open your browser and navigate to `http://localhost:5173`
+## Navigation Controls
 
-## Development Tools
+When exploring the interface on desktop:
 
-XRInterface includes a suite of built-in development tools to help visualize and test XR interfaces:
+- **Mouse**: Look around the environment
+- **WASD**: Move forward/backward/left/right
+- **QE**: Rotate left/right
+- **Space/Shift**: Move up/down
+- **Mouse Wheel**: Zoom in/out
+- **Alt**: Sprint (faster movement)
 
-### Debug Panel
+## Structure
 
-In development mode, a debug panel appears in the top-left corner with controls for:
+The application's structure demonstrates clean architecture with component separation:
 
-- **Grid Visualization**: Toggle a 3D reference grid to understand spatial positioning
-- **Camera Controls**: Enable/disable orbit controls for exploring the 3D scene
-- **Interface Scaling**: Adjust the scale of UI elements to test different sizes
+- **Main Panels**: Interface with "Explore" and "For You" sections
+- **Friends Panel**: Right-side social component
+- **Bottom Toolbar**: Fixed navigation with common app shortcuts
+- **Earth**: Background element with atmospheric glow
+- **Floor Plane**: PBR-textured surface with appropriate reflections
 
-### Camera Navigation
+## XR Design Principles
 
-When camera controls are enabled, you can navigate the 3D scene without a VR headset:
+This project implements key best practices for immersive interfaces:
 
-- **Left Click + Drag**: Rotate the camera around the scene
-- **Right Click + Drag**: Pan the camera
-- **Scroll Wheel**: Zoom in and out
+- **Spatial Design**: Ergonomic positioning of elements in 3D space
+- **Visual Feedback**: Hover states and animations for interaction clarity
+- **Performance First**: Optimized for high frame rates required in VR
+- **Responsive Scale**: Elements adapt to different viewing distances
+- **Modern Aesthetics**: Dark UI with accent colors and subtle depth effects
 
-These tools make it possible to effectively develop and test XR interfaces even without physical VR hardware.
+## Local Development
 
-## Viewing in VR
+```bash
+# Clone the repository
+git clone https://github.com/willhcurry/XRInterface.git
+cd XRInterface
 
-This project supports WebXR for compatible browsers and devices:
+# Install dependencies
+npm install
 
-1. Start the development server
-2. Access the site from a WebXR-compatible browser
-3. Click the "Enter VR" button that appears when a headset is connected
+# Start the development server
+npm run dev
+```
 
-## Documentation
+## Acknowledgments
 
-For more detailed information about the project, check out:
-
-- [Development Plan](./docs/DEVELOPMENT.md)
-- [Technical Stack](./docs/TECHSTACK.md)
-
-## Performance Optimization
-
-XRInterface is optimized for high-performance XR rendering:
-
-- Efficient use of instanced meshes
-- Proper React memo usage to prevent unnecessary re-renders
-- Dynamic level-of-detail based on device capabilities
-- Careful management of Three.js resources
+- Inspired by the Pico VR home interface design
+- Earth texture from NASA visible earth collection
+- Floor textures generated with Adobe Substance 3D
 
 ## License
 
 MIT
-
-## Acknowledgments
-
-- Three.js team for their incredible 3D library
-- React Three Fiber/Drei maintainers for their React integration tools
-
-## XR Design Principles
-
-This project implements several key XR interface design principles:
-
-- **Spatial UI Design**: Ergonomic positioning of elements in 3D space
-- **Interactive Feedback**: Visual cues and animations for user interactions
-- **Performance Optimization**: Techniques to maintain high frame rates
-- **Input Abstraction**: Support for various XR input methods
-- **Content Legibility**: Ensuring text and UI elements are clear in 3D
-
-For more detailed information on the XR principles implemented in this project, see [XR_PRINCIPLES.md](./docs/XR_PRINCIPLES.md).
-
-## Live Demo
-
-View the live demo of this project on GitHub Pages:
-[XRInterface Demo](https://willhcurry.github.io/XRInterface/)
-
-Note: For the best experience, view in a WebXR-compatible browser with a VR headset connected.
-
-## Performance Optimization
-
-This application is optimized for both desktop browser and VR environments:
-
-### Frame Rate Considerations
-- **Browser Mode**: Typically capped at 60fps due to requestAnimationFrame sync with display refresh rate
-- **VR Mode**: Targets the VR headset's native refresh rate (90Hz+ on most modern headsets)
-
-### Performance Features
-- Instanced mesh rendering for thousands of particles
-- Conditional rendering based on debug settings
-- Optimized geometry complexity
-- Efficient matrix updates
-- Frustum culling
-
-### Performance Tuning
-Performance can be adjusted through the debug panel by:
-- Toggling particle effects
-- Adjusting panel scale
-- Enabling/disabling visual effects
-
-For maximum performance in production environments, consider:
-```js
-<Canvas 
-  gl={{ 
-    powerPreference: "high-performance",
-    antialias: false,
-    precision: "mediump"
-  }}
->
-```
