@@ -19,7 +19,7 @@
  * - Custom fragment shader creates realistic atmospheric limb darkening
  * - Optimized with appropriate polygon counts for VR performance
  */
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { getAssetPath } from '../utils/paths';
@@ -42,25 +42,52 @@ const Earth = ({
   const earthRef = useRef();
   const atmosphereRef = useRef();
   
-  // Load Earth texture with environment-aware path
-  const earthTexture = new THREE.TextureLoader().load(
-    getAssetPath('/textures/earth/earth.jpg'),
-    // Success callback
-    texture => {
-      console.log('Earth texture loaded successfully');
-    },
-    // Progress callback
-    undefined,
-    // Error callback
-    err => {
-      console.error('Error loading Earth texture:', err);
+  // Optimize texture loading with useMemo
+  const earthTexture = useMemo(() => {
+    const texture = new THREE.TextureLoader().load(
+      getAssetPath('/textures/earth/earth.jpg')
+    );
+    
+    // Optimize texture properties
+    texture.anisotropy = 16;
+    texture.encoding = THREE.sRGBEncoding;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    
+    // Enable texture compression if supported
+    if (texture.generateMipmaps) {
+      texture.generateMipmaps = true;
+      texture.mipmapFilter = THREE.LinearMipmapLinearFilter;
     }
-  );
+    
+    return texture;
+  }, []); // Empty dependency array ensures this runs once
   
-  // Improve texture quality with advanced settings
-  earthTexture.anisotropy = 16;
-  earthTexture.encoding = THREE.sRGBEncoding;
-  earthTexture.minFilter = THREE.LinearMipmapLinearFilter;
+  // Optimize geometry with useMemo to prevent recreation
+  const earthGeometry = useMemo(() => new THREE.SphereGeometry(1, 48, 48), []);
+  const atmosphereGeometry = useMemo(() => new THREE.SphereGeometry(1, 24, 24), []);
+  
+  // Optimize shader material with useMemo
+  const atmosphereMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vNormal;
+        void main() {
+          float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+          gl_FragColor = vec4(0.3, 0.6, 1.0, 1.0) * intensity;
+        }
+      `,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide,
+      transparent: true
+    });
+  }, []);
   
   // Animate Earth rotation
   useFrame(({ clock }) => {
