@@ -25,7 +25,7 @@
  * - Metalness: Metallic vs. dielectric material properties
  * - Ambient Occlusion: Natural shadowing in recessed areas
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { getAssetPath } from '../utils/paths';
@@ -42,37 +42,32 @@ const FloorPlane = ({
   position = [0, -0.7, 0], 
   size = 20
 }) => {
-  // Load texture maps with environment-aware paths
-  const textureMaps = useTexture({
-    map: getAssetPath('/textures/wood/color.png'),
-    normalMap: getAssetPath('/textures/wood/normal.png'),
-    roughnessMap: getAssetPath('/textures/wood/roughness.png'),
-    metalnessMap: getAssetPath('/textures/wood/metalness.png'),
-    aoMap: getAssetPath('/textures/wood/ao.png'),
-  });
-  
-  // Configure texture repeat for proper tiling based on floor size
-  useEffect(() => {
-    // Apply consistent settings to all textures
-    Object.values(textureMaps).forEach(texture => {
-      // Enable texture wrapping for seamless tiling
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      
-      // Scale repetition based on floor size (4 tiles across total width)
-      texture.repeat.set(size/4, size/4);
-      
-      // Use high quality texture filtering
-      texture.minFilter = THREE.LinearMipmapLinearFilter;
-      texture.magFilter = THREE.LinearFilter;
+  // Optimize texture loading with useMemo
+  const textureMaps = useMemo(() => {
+    const maps = useTexture({
+      map: getAssetPath('/textures/wood/color.png'),
+      normalMap: getAssetPath('/textures/wood/normal.png'),
+      roughnessMap: getAssetPath('/textures/wood/roughness.png'),
+      metalnessMap: getAssetPath('/textures/wood/metalness.png'),
+      aoMap: getAssetPath('/textures/wood/ao.png'),
     });
     
-    // Cleanup function for texture disposal if component unmounts
-    return () => {
-      Object.values(textureMaps).forEach(texture => {
-        texture.dispose();
-      });
-    };
-  }, [textureMaps, size]);
+    // Apply settings to all textures
+    Object.values(maps).forEach(texture => {
+      // Enable texture wrapping for seamless tiling
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      // Scale repetition based on floor size (4 tiles across total width)
+      texture.repeat.set(size/4, size/4);
+      // Enable mipmapping for better performance at different distances
+      texture.generateMipmaps = true;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      // Apply texture anisotropy for better appearance at shallow angles
+      texture.anisotropy = 16;
+    });
+    
+    return maps;
+  }, [size]); // Only recalculate when size changes
 
   return (
     <mesh 
@@ -80,8 +75,8 @@ const FloorPlane = ({
       rotation={[-Math.PI / 2, 0, 0]} // Rotate to horizontal orientation
       receiveShadow
     >
-      {/* Higher segment count for better normal map detail */}
-      <planeGeometry args={[size, size, 64, 64]} />
+      {/* Optimize the floor geometry - reduce segments */}
+      <planeGeometry args={[size, size, 16, 16]} /> {/* Reduced from 64, 64 */}
       <meshStandardMaterial 
         {...textureMaps}
         envMapIntensity={0.5} // Reflection intensity
