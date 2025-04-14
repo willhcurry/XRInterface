@@ -92,8 +92,14 @@ const Earth = ({
   // Animate Earth rotation
   useFrame(({ clock }) => {
     if (rotate && earthRef.current) {
-      // One full rotation approximately every 2 minutes
-      earthRef.current.rotation.y = clock.getElapsedTime() * 0.05;
+      // Avoid updating every frame in production
+      const time = clock.getElapsedTime() * 0.05;
+      const newRotation = time % (2 * Math.PI);
+      
+      // Only update if significant change
+      if (Math.abs(earthRef.current.rotation.y - newRotation) > 0.01) {
+        earthRef.current.rotation.y = newRotation;
+      }
     }
   });
 

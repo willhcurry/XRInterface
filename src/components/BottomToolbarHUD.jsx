@@ -77,14 +77,25 @@ const BottomToolbarHUD = () => {
   
   // Update the clock every minute
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    // Initial time set outside the interval
+    setCurrentTime(
+      new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+    );
+    
+    // Reference the function to avoid recreation on each render
+    const updateTime = () => {
       setCurrentTime(
         new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
       );
-    }, 60000); // Update every minute
+    };
     
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, []);
+    const intervalId = setInterval(updateTime, 60000);
+    
+    // Critical: Properly clean up on unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []); // Empty dependency array ensures this runs only once
 
   /**
    * Handles toolbar icon click events
