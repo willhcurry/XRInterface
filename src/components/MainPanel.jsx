@@ -16,18 +16,66 @@ import React, { useMemo } from 'react';
 import { Box } from '@react-three/drei';
 import { Html } from '@react-three/drei';
 
-// Application data constants - extracted to avoid inline definition on each render
+// Application data constants with more detailed information and app icons
 const FEATURED_APPS = [
-  { id: 'beat-saber', name: 'Beat Saber', color: '#E91E63', category: 'Music & Rhythm' },
-  { id: 'blade-fury', name: 'Blade & Fury', color: '#3F51B5', category: 'Action' },
-  { id: 'job-simulator', name: 'Job Simulator', color: '#4CAF50', category: 'Simulation' }
+  { 
+    id: 'beat-saber', 
+    name: 'Beat Saber', 
+    color: 'linear-gradient(135deg, #E91E63, #9C27B0)', 
+    category: 'Music & Rhythm',
+    icon: '🎵',
+    users: '5.2M+',
+    rating: 4.8
+  },
+  { 
+    id: 'blade-fury', 
+    name: 'Blade & Fury', 
+    color: 'linear-gradient(135deg, #3F51B5, #2196F3)', 
+    category: 'Action',
+    icon: '⚔️',
+    users: '2.8M+',
+    rating: 4.5
+  },
+  { 
+    id: 'job-simulator', 
+    name: 'Job Simulator', 
+    color: 'linear-gradient(135deg, #4CAF50, #8BC34A)', 
+    category: 'Simulation',
+    icon: '🧑‍💼',
+    users: '3.4M+',
+    rating: 4.7
+  }
 ];
 
 const PERSONAL_APPS = [
-  { id: 'virtual-desktop', name: 'Virtual Desktop', color: '#2196F3' },
-  { id: 'eleven-table', name: 'Eleven Table Tennis', color: '#FF9800' },
-  { id: 'superhot', name: 'SuperHOT VR', color: '#F44336' },
-  { id: 'all-in-one', name: 'All-in-One Sports VR', color: '#009688' }
+  { 
+    id: 'virtual-desktop', 
+    name: 'Virtual Desktop', 
+    color: 'linear-gradient(135deg, #2196F3, #03A9F4)',
+    icon: '🖥️',
+    lastUsed: '2 days ago'
+  },
+  { 
+    id: 'eleven-table', 
+    name: 'Eleven Table Tennis', 
+    color: 'linear-gradient(135deg, #FF9800, #FF5722)',
+    icon: '🏓',
+    lastUsed: 'Yesterday'
+  },
+  { 
+    id: 'superhot', 
+    name: 'SuperHOT VR', 
+    color: 'linear-gradient(135deg, #F44336, #E91E63)',
+    icon: '🔥',
+    lastUsed: '3 days ago'
+  },
+  { 
+    id: 'all-in-one', 
+    name: 'All-in-One Sports VR', 
+    color: 'linear-gradient(135deg, #009688, #4CAF50)',
+    icon: '🏀',
+    lastUsed: 'Just now'
+  }
 ];
 
 // Common styles - extracted to avoid duplication
@@ -80,8 +128,26 @@ const MainPanel = () => {
       overflow: 'hidden',
       cursor: 'pointer',
       boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-      backgroundColor: app.color
+      background: app.color
     }}>
+      {/* Top section with app icon */}
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        right: '10px',
+        width: '40px',
+        height: '40px',
+        background: 'rgba(255,255,255,0.2)',
+        borderRadius: '8px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: '24px'
+      }}>
+        {app.icon}
+      </div>
+      
+      {/* Bottom info section */}
       <div style={{
         position: 'absolute',
         bottom: '0', left: '0', right: '0',
@@ -89,7 +155,19 @@ const MainPanel = () => {
         background: 'linear-gradient(transparent, rgba(0,0,0,0.8))'
       }}>
         <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{app.name}</div>
-        <div style={{ fontSize: '14px', opacity: '0.8' }}>{app.category}</div>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          marginTop: '5px'
+        }}>
+          <div style={{ fontSize: '14px', opacity: '0.8' }}>{app.category}</div>
+          <div style={{ fontSize: '14px', opacity: '0.8' }}>
+            {'⭐'.repeat(Math.floor(app.rating))} {app.rating}
+          </div>
+        </div>
+        <div style={{ fontSize: '12px', opacity: '0.6', marginTop: '2px' }}>
+          {app.users} players
+        </div>
       </div>
     </div>
   );
@@ -109,15 +187,36 @@ const MainPanel = () => {
       overflow: 'hidden',
       cursor: 'pointer',
       boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-      backgroundColor: app.color
+      background: app.color
     }}>
+      {/* App icon */}
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        left: '10px',
+        width: '32px',
+        height: '32px',
+        background: 'rgba(255,255,255,0.2)',
+        borderRadius: '6px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: '18px'
+      }}>
+        {app.icon}
+      </div>
+      
+      {/* App info */}
       <div style={{
         position: 'absolute',
         bottom: '0', left: '0', right: '0',
         padding: '8px',
         background: 'linear-gradient(transparent, rgba(0,0,0,0.8))'
       }}>
-        <div style={{ fontSize: '14px', fontWeight: 'bold' }}>{app.name}</div>
+        <div style={{ fontSize: '16px', fontWeight: 'bold' }}>{app.name}</div>
+        <div style={{ fontSize: '12px', opacity: '0.7', marginTop: '2px' }}>
+          {app.lastUsed}
+        </div>
       </div>
     </div>
   );
