@@ -1,43 +1,46 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-require('dotenv').config();
+const config = require('./config/config');
+const mongoose = require('mongoose'); // You'll need to install this
+
+// Import routes (we'll create these next)
+const testRoutes = require('./routes/test.routes');
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-// Test route
-app.get('/api/v1/test', (req, res) => {
-  res.json({ 
-    message: 'XR Interface API is running',
-    apps: [
-      { 
-        id: 'beat-saber', 
-        name: 'Beat Saber', 
-        color: { from: '#E91E63', to: '#9C27B0' }, 
-        category: 'Music & Rhythm',
-        icon: '🎵',
-        users: '5.2M+',
-        rating: 4.8
-      },
-      { 
-        id: 'blade-fury', 
-        name: 'Blade & Fury', 
-        color: { from: '#3F51B5', to: '#2196F3' }, 
-        category: 'Action',
-        icon: '⚔️',
-        users: '2.8M+',
-        rating: 4.5
-      }
-    ]
+// Connect to MongoDB (if running locally, make sure MongoDB is installed and running)
+if (config.mongoURI) {
+  mongoose.connect(config.mongoURI)
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log('MongoDB Connection Error:', err));
+}
+
+// Use routes
+app.use('/api/v1/test', testRoutes);
+app.use('/api/v1/auth', authRoutes);
+
+// Default route
+app.get('/', (req, res) => {
+  res.json({ message: 'XR Interface API is running' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    error: 'Server error', 
+    message: config.nodeEnv === 'development' ? err.message : 'An unexpected error occurred'
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Start server
+app.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
 });
